@@ -1,0 +1,27 @@
+{
+  "name": "instagram-backend",
+  "version": "1.0.0",
+  "description": "Clone of instagram bakckend using NodeJS Express Sql and MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ali Cembranos",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.7.16",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "^8.23.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "loglevel": "^1.8.0",
+    "mongoose": "^6.6.0",
+    "typescript": "^4.8.3"
+  }
+}
