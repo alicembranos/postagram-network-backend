@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import ISavedPost from './savedPost.interface';
 
-const { Schema } = mongoose;
+const { Schema, Model } = mongoose;
 
-const postSchema = new Schema<ISavedPost>(
+const savedPostSchema = new Schema<ISavedPost>(
   {
     owner: {
       type: Schema.Types.ObjectId,
@@ -17,4 +17,7 @@ const postSchema = new Schema<ISavedPost>(
   { timestamps: true },
 );
 
-export default mongoose.model('post', postSchema);
+
+const SavedPostModel = new Model('SavedPost', savedPostSchema);
+
+export default SavedPostModel;
