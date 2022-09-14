@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import ISavedPost from './savedPost.interface';
 
-const { Schema, Model } = mongoose;
+const { Schema } = mongoose;
 
 const savedPostSchema = new Schema<ISavedPost>(
   {
@@ -17,7 +17,6 @@ const savedPostSchema = new Schema<ISavedPost>(
   { timestamps: true },
 );
 
-
-const SavedPostModel = new Model('SavedPost', savedPostSchema);
+const SavedPostModel = mongoose.model('SavedPost', savedPostSchema);
 
 export default SavedPostModel;

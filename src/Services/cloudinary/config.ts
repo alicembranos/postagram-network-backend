@@ -1,7 +1,7 @@
-import { createRequire } from 'module';
 import config from '../../Config/config';
 import cloudinary from 'cloudinary';
 import { resolve } from 'path';
+import { Response } from 'express';
 
 const Cloudinary = cloudinary.v2;
 
@@ -12,15 +12,14 @@ Cloudinary.config({
   secure: true,
 });
 
-export const fileUpload = async (file: string) => {
-  return new Promise(resolve => {
+export const fileUpload = async (file: string, res: Response): Promise<string> => {
+  return new Promise((resolve, reject) => {
     Cloudinary.uploader.upload(file, { folder: 'postgram' }, (error, res) => {
       if (error) {
         // return res.status(500).json({ msg: 'Failed to upload file' });
-        return "error";
+        return reject(new Error('Failed to upload file'));
       }
       resolve(res.secure_url); //will return a secure url of the cloud file path
     });
   });
 };
-

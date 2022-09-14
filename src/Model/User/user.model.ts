@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import IUser from './user.interface';
 import bcrypt from 'bcrypt';
 
-const { Schema , Model} = mongoose;
+const { Schema } = mongoose;
 
 export const userSchema = new Schema<IUser>(
   {
@@ -90,6 +90,6 @@ userSchema.methods.comparePassword = async function (candiatePassword: string): 
   }
 };
 
-const UserModel = new Model('User', userSchema);
+const UserModel = mongoose.model('User', userSchema);
 
 export default UserModel;

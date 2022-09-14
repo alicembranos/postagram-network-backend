@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import IPost from './post.interface';
 
-const { Schema, Model } = mongoose;
+const { Schema } = mongoose;
 
 const postSchema = new Schema<IPost>(
   {
@@ -35,6 +35,6 @@ const postSchema = new Schema<IPost>(
   { timestamps: true },
 );
 
-const PostModel = new Model('Post', postSchema);
+const PostModel = mongoose.model('Post', postSchema);
 
 export default PostModel;
