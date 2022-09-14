@@ -11,6 +11,7 @@ const CONFIG = {
   production: {
     app: {
       PORT: process.env.PORT || 4000,
+      PRIVATE_KEY: process.env.JWT_PRIVATE_KEY,
     },
     logger: {
       warn: log.warn,
@@ -31,6 +32,7 @@ const CONFIG = {
   development: {
     app: {
       PORT: process.env.PORT || 4000,
+      PRIVATE_KEY: process.env.JWT_PRIVATE_KEY,
     },
     logger: {
       warn: log.warn,
@@ -51,6 +53,7 @@ const CONFIG = {
   test: {
     app: {
       PORT: process.env.PORT || 4000,
+      PRIVATE_KEY: process.env.JWT_PRIVATE_KEY,
     },
     logger: {
       warn: log.warn,

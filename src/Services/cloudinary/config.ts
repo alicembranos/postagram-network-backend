@@ -16,6 +16,7 @@ export const fileUpload = async (file: string, res: Response): Promise<string> =
   return new Promise((resolve, reject) => {
     Cloudinary.uploader.upload(file, { folder: 'postgram' }, (error, res) => {
       if (error) {
+        console.log('error',error);
         // return res.status(500).json({ msg: 'Failed to upload file' });
         return reject(new Error('Failed to upload file'));
       }

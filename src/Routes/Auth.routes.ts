@@ -7,12 +7,12 @@ const { Authorize } = Controllers;
 //authController class
 const Controller = new Authorize();
 
-authRouter.post('/signup', (req, res, next) => {
+authRouter.post('/signup', (req, res, next) => {  //?include validation middleware
   Controller.signup(req, res, next);
 });
 
-authRouter.post('/signin', (req, res, next) => {
-  Controller.signin();
+authRouter.post('/signin', (req, res) => {
+  Controller.signin(req, res);
 });
 
 export default authRouter;

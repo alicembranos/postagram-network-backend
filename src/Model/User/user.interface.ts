@@ -8,4 +8,5 @@ export default interface IUser {
   following?: Array<IUser>;
   followers?: Array<IUser>;
   profile: string;
+  comparePassword?: (candiatePassword: string) => Promise<Boolean>;
 }
