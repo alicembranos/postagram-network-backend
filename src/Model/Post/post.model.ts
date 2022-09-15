@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import IPost from './post.interface';
+import { TComment } from './post.interface';
 
 const { Schema } = mongoose;
 
@@ -25,12 +26,12 @@ const postSchema = new Schema<IPost>(
         default: [],
       },
     ],
-    comments: [
+    comments: 
       {
-        type: String,
+        type: [TComment],
         default: [],
       },
-    ],
+    
   },
   { timestamps: true },
 );

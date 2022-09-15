@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { MyRequest } from '@/interfaces/Request.interface';
+import { MyRequest } from '../interfaces/request.interface';
 import formidable, { Fields, File, Files } from 'formidable';
 import config from '@/Config/config';
 import { fileUpload } from '../Services/cloudinary/config';
@@ -7,11 +7,13 @@ import db from '../Model';
 
 interface Post {
   create(request: MyRequest, response: Response, next: NextFunction): void;
-  // Promise<Response<any, Record<string, any>>>
-  getPosts(_, response: Response): void;
+  getPosts(_, response: Response): Promise<Response<any, Record<string, any>>>;
+  likePost(request: MyRequest, response: Response): Promise<Response<any, Record<string, any>>>;
+  commentPost(request: MyRequest, response: Response): Promise<Response<any, Record<string, any>>>;
 }
 
 export class PostController implements Post {
+  //create post
   create(request: MyRequest, response: Response, next: NextFunction) {
     //TODO: authentication token middleware
     const formData = formidable({});
@@ -24,7 +26,7 @@ export class PostController implements Post {
         }
 
         const token = request.token;
-        const id = token._id;
+        const authorId = token._id;
         const { caption } = fields;
         const mediaUrls = [];
 
@@ -43,9 +45,8 @@ export class PostController implements Post {
         const newPost = await db.Post.create({
           media: mediaUrls,
           caption: caption,
-          author: id,
+          author: authorId,
         });
-        console.log('newPost', newPost);
 
         return response
           .status(201)
@@ -57,6 +58,7 @@ export class PostController implements Post {
     });
   }
 
+  //get posts
   async getPosts(_, response: Response) {
     try {
       const posts = await db.Post.find({}).exec();
@@ -64,6 +66,86 @@ export class PostController implements Post {
       return response
         .status(200)
         .json({ status: true, msg: 'Posts fetched succesfully', data: { posts: posts } });
+    } catch (error) {
+      config.logger.error(error);
+      return response.status(500).json({ status: false, msg: error.message });
+    }
+  }
+
+  //toggle like post
+  async likePost(request: MyRequest, response: Response) {
+    const token = request.token;
+    const username = token.username;
+    const postId = request.params.id;
+    try {
+      const post = await db.Post.findById(postId);
+      if (!post) {
+        throw new Error('Post not found');
+      }
+
+      let likes = [];
+
+      if (!post.likes) {
+        likes = [username];
+      } else if (!post.likes.includes(username)) {
+        likes = [...post.likes, username];
+      } else {
+        const userIndexInArray = post.likes.indexOf(username);
+        post.likes.splice(userIndexInArray, 1);
+        likes = [...post.likes];
+      }
+
+      const updatedPost = await db.Post.findByIdAndUpdate(
+        postId,
+        { likes: likes },
+        { new: true },
+      ).exec();
+
+      return response
+        .status(200)
+        .json({ status: true, msg: 'Post likes updated', data: { post: updatedPost } });
+    } catch (error) {
+      config.logger.error(error);
+      return response.status(500).json({ status: false, msg: error.message });
+    }
+  }
+
+  //comment post
+  async commentPost(request: MyRequest, response: Response) {
+    const token = request.token;
+    const username = token.username;
+    const { comment } = request.body;
+    const postId = request.params.id;
+
+    try {
+      const post = await db.Post.findById(postId);
+      if (!post) {
+        throw new Error('Post not found');
+      }
+
+      let comments = [];
+      const newComment = {
+        username: username,
+        comment: comment,
+        likes: 0,
+        replies: [],
+      };
+
+      if (!post.comments) {
+        comments = [newComment];
+      } else {
+        comments = [...post.comments, newComment];
+      }
+
+      const updatedPost = await db.Post.findByIdAndUpdate(
+        postId,
+        { comments: comments },
+        { new: true },
+      ).exec();
+
+      return response
+        .status(200)
+        .json({ status: true, msg: 'Post comments updated', data: { post: updatedPost } });
     } catch (error) {
       config.logger.error(error);
       return response.status(500).json({ status: false, msg: error.message });

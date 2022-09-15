@@ -5,5 +5,12 @@ export default interface IPost {
   caption: string;
   author: IUser;
   likes: Array<string>;
-  comments: Array<string>;
+  comments: Array<TComment>;
 }
+
+export interface TComment  {
+  username: string;
+  comment: string;
+  likes: number;
+  replies: Array<string>;
+};

@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import Controllers from '@/Controllers';
 import authenticate from '@/Middleware/authenticate.middleware';
-import { MyRequest } from '@/interfaces/Request.interface';
+import { MyRequest } from '../interfaces/request.interface';
 
 const postRouter = Router();
 const { Post } = Controllers;
@@ -18,9 +18,13 @@ postRouter.get('/post', (_, res: Response) => {
   Controller.getPosts(_, res);
 });
 
-postRouter.get('/post-like/:id', authenticate, (req: MyRequest, res: Response) => {});
+postRouter.patch('/post-like/:id', authenticate, (req: MyRequest, res: Response) => {
+  Controller.likePost(req, res);
+});
 
-postRouter.post('/post-comment/:id', authenticate, (req: MyRequest, res: Response) => {});
+postRouter.patch('/post-comment/:id', authenticate, (req: MyRequest, res: Response) => {
+  Controller.commentPost(req, res);
+});
 
 postRouter.post(
   '/post-reply-comment/:username/:id/:idx',

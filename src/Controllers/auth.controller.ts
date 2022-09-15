@@ -16,7 +16,7 @@ export class AuthController implements Auth {
     //TODO: Validation user data, middleware?
     //TODO change to json data , file???
     const formData = formidable({});
-    formData.parse(request, async (err: any, fields: Fields, files: any) => {
+    formData.parse(request, async (err: unknown, fields: Fields, files: any) => {
       //files is an array so we need to use any beacuse it will be only one file
       try {
         if (err) {
@@ -93,7 +93,7 @@ export class AuthController implements Auth {
 
       const token_payload = {
         _id: userLogged._id,
-        email: userLogged.email,
+        username: userLogged.username,
       };
 
       //!json web token expires in 1hour
