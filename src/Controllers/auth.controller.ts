@@ -40,7 +40,7 @@ export class AuthController implements Auth {
         const profile_url = await fileUpload(profile.filepath, response); //cloudinary is asynchronous
 
         //!Middleware in userSchema for hash password, not needed here
-        let newUser = await db.User.create({
+        const newUser = await db.User.create({
           username: username,
           email: email,
           password: password,
@@ -61,7 +61,7 @@ export class AuthController implements Auth {
             profile: newUser.profile,
             following: newUser.following,
             followers: newUser.followers,
-          }, //? maybe would be great to create a function to sanitize user (remove createdAt, updatedAt, etc)
+          }, //? maybe would be good to create a function to sanitize user (remove createdAt, updatedAt, etc)
         });
       } catch (error) {
         config.logger.error(error);
@@ -97,7 +97,7 @@ export class AuthController implements Auth {
       };
 
       //!json web token expires in 1hour
-      const token = sign(token_payload, config.app.PRIVATE_KEY, { expiresIn: 3600000 });
+      const token = sign(token_payload, config.app.PRIVATE_KEY, { expiresIn: '3600s' });
 
       return response.json({ status: true, msg: 'User logged', jwt: token });
     } catch (error) {

@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import Controllers from '../Controllers/index';
+import { Router, Request, Response, NextFunction } from 'express';
+import Controllers from '@/Controllers';
 
 const authRouter = Router();
 const { Authorize } = Controllers;
@@ -7,11 +7,12 @@ const { Authorize } = Controllers;
 //authController class
 const Controller = new Authorize();
 
-authRouter.post('/signup', (req, res, next) => {  //?include validation middleware
+authRouter.post('/signup', (req : Request, res : Response, next: NextFunction) => {
+  //?include validation middleware
   Controller.signup(req, res, next);
 });
 
-authRouter.post('/signin', (req, res) => {
+authRouter.post('/signin', (req: Request, res:Response) => {
   Controller.signin(req, res);
 });
 
