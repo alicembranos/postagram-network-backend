@@ -1228,6 +1228,11 @@
   dependencies:
     "function-bind" "^1.1.1"
 
+"helmet@^6.0.0":
+  "integrity" "sha512-FO9RpR1wNJepH/GbLPQVtkE2eESglXL641p7SdyoT4LngHFJcZheHMoyUcjCZF4qpuMMO1u5q6RK0l9Ux8JBcg=="
+  "resolved" "https://registry.npmjs.org/helmet/-/helmet-6.0.0.tgz"
+  "version" "6.0.0"
+
 "hexoid@1.0.0":
   "integrity" "sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g=="
   "resolved" "https://registry.npmjs.org/hexoid/-/hexoid-1.0.0.tgz"

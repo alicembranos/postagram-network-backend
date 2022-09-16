@@ -1,16 +1,10 @@
+import IComment from '../Comment/comment.interface';
 import IUser from '../User/user.interface';
 
 export default interface IPost {
   media: Array<string>;
   caption: string;
   author: IUser;
-  likes: Array<string>;
-  comments: Array<TComment>;
+  likes: Array<IUser>;
+  comments: Array<IComment>;
 }
-
-export interface TComment  {
-  username: string;
-  comment: string;
-  likes: number;
-  replies: Array<string>;
-};

@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import IPost from './post.interface';
-import { TComment } from './post.interface';
 
 const { Schema } = mongoose;
 
@@ -22,20 +21,22 @@ const postSchema = new Schema<IPost>(
     },
     likes: [
       {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         default: [],
       },
     ],
-    comments: 
+    comments: [
       {
-        type: [TComment],
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
         default: [],
       },
-    
+    ],
   },
   { timestamps: true },
 );
 
-const PostModel = mongoose.model('Post', postSchema);
+const PostModel = mongoose.model<IPost>('Post', postSchema);
 
 export default PostModel;

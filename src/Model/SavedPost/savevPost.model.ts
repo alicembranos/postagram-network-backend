@@ -17,6 +17,6 @@ const savedPostSchema = new Schema<ISavedPost>(
   { timestamps: true },
 );
 
-const SavedPostModel = mongoose.model('SavedPost', savedPostSchema);
+const SavedPostModel = mongoose.model<ISavedPost>('SavedPost', savedPostSchema);
 
 export default SavedPostModel;

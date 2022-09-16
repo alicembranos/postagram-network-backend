@@ -75,7 +75,7 @@ export class PostController implements Post {
   //toggle like post
   async likePost(request: MyRequest, response: Response) {
     const token = request.token;
-    const username = token.username;
+    const authorId = token._id;
     const postId = request.params.id;
     try {
       const post = await db.Post.findById(postId);
@@ -86,11 +86,11 @@ export class PostController implements Post {
       let likes = [];
 
       if (!post.likes) {
-        likes = [username];
-      } else if (!post.likes.includes(username)) {
-        likes = [...post.likes, username];
+        likes = [authorId];
+      } else if (!post.likes.includes(authorId)) {
+        likes = [...post.likes, authorId];
       } else {
-        const userIndexInArray = post.likes.indexOf(username);
+        const userIndexInArray = post.likes.indexOf(authorId);
         post.likes.splice(userIndexInArray, 1);
         likes = [...post.likes];
       }
@@ -142,7 +142,8 @@ export class PostController implements Post {
         { comments: comments },
         { new: true },
       ).exec();
-
+        //https://mongoosejs.com/docs/populate.html
+      //https://stackoverflow.com/questions/38820071/create-object-parent-which-nested-children-in-mongoose
       return response
         .status(200)
         .json({ status: true, msg: 'Post comments updated', data: { post: updatedPost } });
