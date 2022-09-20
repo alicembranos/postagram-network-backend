@@ -61,6 +61,7 @@ export class AuthController implements Auth {
             profile: newUser.profile,
             following: newUser.following,
             followers: newUser.followers,
+            posts: newUser.posts
           }, //? maybe would be good to create a function to sanitize user (remove createdAt, updatedAt, etc)
         });
       } catch (error) {
@@ -74,7 +75,7 @@ export class AuthController implements Auth {
     const { email, password } = request.body;
 
     if (!email || !password)
-      return response.status(400).json({ status: false, msg: 'Email already exists.' });
+      return response.status(400).json({ status: false, msg: 'All fields are required.' });
 
     try {
       //if we use exec it will return a promise, otherwise, it will return a "thenable"

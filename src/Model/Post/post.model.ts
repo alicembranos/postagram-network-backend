@@ -1,3 +1,4 @@
+import autopopulate from '@/Helpers/autopopulate';
 import mongoose from 'mongoose';
 import IPost from './post.interface';
 
@@ -18,6 +19,7 @@ const postSchema = new Schema<IPost>(
     author: {
       type: Schema.Types.ObjectId,
       ref: 'User',
+      required: true,
     },
     likes: [
       {
@@ -36,6 +38,13 @@ const postSchema = new Schema<IPost>(
   },
   { timestamps: true },
 );
+
+postSchema.pre('find', () => autopopulate("author"))
+  .pre('findOne', () => autopopulate("author"))
+  .pre('find', () => autopopulate("likes"))
+  .pre('findOne', () => autopopulate("likes"))
+  .pre('find', () => autopopulate("comments"))
+  .pre('findOne', () => autopopulate("comments"))
 
 const PostModel = mongoose.model<IPost>('Post', postSchema);
 

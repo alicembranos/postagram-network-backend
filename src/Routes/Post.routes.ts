@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import Controllers from '@/Controllers';
 import authenticate from '@/Middleware/authenticate.middleware';
-import { MyRequest } from '../interfaces/request.interface';
+import { MyRequest } from '@/Interfaces/request.interface';
 
 const postRouter = Router();
 const { Post } = Controllers;

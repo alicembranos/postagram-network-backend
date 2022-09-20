@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { MyRequest } from '../interfaces/request.interface';
+import { MyRequest } from '@/Interfaces/request.interface';
 import formidable, { Fields, File, Files } from 'formidable';
 import config from '@/Config/config';
 import { fileUpload } from '../Services/cloudinary/config';
@@ -25,8 +25,8 @@ export class PostController implements Post {
           return;
         }
 
-        const token = request.token;
-        const authorId = token._id;
+        const user = request.user;
+        const authorId = user._id;
         const { caption } = fields;
         const mediaUrls = [];
 
@@ -34,7 +34,6 @@ export class PostController implements Post {
         const filesPromises = Object.keys(files).map(async fileItem => {
           const filePath = (files[fileItem] as File).filepath;
           const urlFile = await fileUpload(filePath, response);
-          console.log('urlFile', urlFile);
           mediaUrls.push(urlFile);
         });
 
@@ -47,6 +46,11 @@ export class PostController implements Post {
           caption: caption,
           author: authorId,
         });
+
+        //!Look up the current user and add the new post to their post
+        const currentUser = await db.User.findById(authorId);
+        currentUser.posts.unshift(newPost);
+        const updatedUser = await currentUser.save();
 
         return response
           .status(201)
@@ -74,8 +78,8 @@ export class PostController implements Post {
 
   //toggle like post
   async likePost(request: MyRequest, response: Response) {
-    const token = request.token;
-    const authorId = token._id;
+    const user = request.user;
+    const authorId = user._id;
     const postId = request.params.id;
     try {
       const post = await db.Post.findById(postId);
@@ -112,8 +116,8 @@ export class PostController implements Post {
 
   //comment post
   async commentPost(request: MyRequest, response: Response) {
-    const token = request.token;
-    const username = token.username;
+    const user = request.user;
+    const username = user.username;
     const { comment } = request.body;
     const postId = request.params.id;
 
@@ -142,7 +146,7 @@ export class PostController implements Post {
         { comments: comments },
         { new: true },
       ).exec();
-        //https://mongoosejs.com/docs/populate.html
+      //https://mongoosejs.com/docs/populate.html
       //https://stackoverflow.com/questions/38820071/create-object-parent-which-nested-children-in-mongoose
       return response
         .status(200)

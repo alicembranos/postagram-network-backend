@@ -29,11 +29,19 @@ const commentSchema = new Schema<IComment>({
   ],
 });
 
+//create loop
 commentSchema
-    .pre('findOne', autopopulate('author'))
-    .pre('find', autopopulate('author'))
-    .pre('findOne', autopopulate('author'))
-    .pre('find', autopopulate('author'));
-
+  .pre('findOne', () => {
+    autopopulate('author');
+  })
+  .pre('find', () => {
+    autopopulate('author');
+  })
+  .pre('findOne', () => {
+    autopopulate('comments');
+  })
+  .pre('find', () => {
+    autopopulate('comments');
+  });
 
 const CommentModel = mongoose.model<IComment>('Comment', commentSchema);

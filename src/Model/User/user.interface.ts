@@ -1,3 +1,5 @@
+import IPost from '../Post/post.interface';
+
 export default interface IUser {
   username: string;
   email: string;
@@ -8,5 +10,6 @@ export default interface IUser {
   following?: Array<IUser>;
   followers?: Array<IUser>;
   profile: string;
+  posts?: Array<IPost>;
   comparePassword?: (candiatePassword: string) => Promise<Boolean>;
 }
