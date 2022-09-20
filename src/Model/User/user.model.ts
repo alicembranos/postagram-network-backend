@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
-import IUser from './user.interface';
+import IUser, { IUserMethods, UserModel, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
 import { NextFunction } from 'express';
 import autopopulate from '@/Helpers/autopopulate';
 
 const { Schema } = mongoose;
 
-export const userSchema = new Schema<IUser>(
+export const userSchema = new Schema<IUser, UserModel, IUserMethods>(
   {
     username: {
       type: String,
@@ -61,7 +61,7 @@ export const userSchema = new Schema<IUser>(
       {
         type: Schema.Types.ObjectId,
         ref: 'Post',
-        default:[]
+        default: [],
       },
     ],
   },
@@ -76,7 +76,7 @@ userSchema.virtual('fullname').get(function getFullName() {
 });
 
 //Middleware to save encrypted password if it has been modified
-userSchema.pre('save', async function passwordPreSave(next : NextFunction) {
+userSchema.pre('save', async function passwordPreSave(next: NextFunction) {
   if (!this.isModified('password')) return next();
 
   try {
@@ -85,27 +85,28 @@ userSchema.pre('save', async function passwordPreSave(next : NextFunction) {
     const hash = await bcrypt.hash(this.password, salt);
     this.password = hash;
     return next();
-  } catch (error : unknown) {
+  } catch (error: unknown) {
     next(error);
   }
 });
 
 //Compare a candidate password with the user's password
-userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
+userSchema.method('comparePassword', async function (candidatePassword: string): Promise<boolean> {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
-  } catch (error : unknown) {
+  } catch (error: unknown) {
     return false;
   }
-};
+});
 
-userSchema.pre('find', () => autopopulate("following"))
-  .pre('findOne', () => autopopulate("following"))
-  .pre('find', () => autopopulate("followers"))
-  .pre('findOne', () => autopopulate("followers"))
-  .pre('find', () => autopopulate("posts"))
-  .pre('findOne', () => autopopulate("posts"))
+userSchema
+  .pre('find', () => autopopulate('following'))
+  .pre('findOne', () => autopopulate('following'))
+  .pre('find', () => autopopulate('followers'))
+  .pre('findOne', () => autopopulate('followers'))
+  .pre('find', () => autopopulate('posts'))
+  .pre('findOne', () => autopopulate('posts'));
 
-const UserModel = mongoose.model<IUser>('User', userSchema);
+const UserModel = mongoose.model<IUser, UserModel>('User', userSchema);
 
 export default UserModel;

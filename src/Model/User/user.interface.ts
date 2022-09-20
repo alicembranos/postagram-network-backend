@@ -1,3 +1,4 @@
+import { Model } from 'mongoose';
 import IPost from '../Post/post.interface';
 
 export default interface IUser {
@@ -11,5 +12,10 @@ export default interface IUser {
   followers?: Array<IUser>;
   profile: string;
   posts?: Array<IPost>;
-  comparePassword?: (candiatePassword: string) => Promise<Boolean>;
 }
+
+export interface IUserMethods {
+  comparePassword: (candiatePassword: string) => Promise<Boolean>;
+}
+
+export type UserModel = Model<IUser, {}, IUserMethods>;
